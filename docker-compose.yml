@@ -1,0 +1,35 @@
+services:
+
+    portal-database:
+        image: postgres:16.1
+        ports:
+            - "54321:5432"
+        environment:
+            - POSTGRES_DB=portal_template
+            - POSTGRES_USER=portal-template
+            - POSTGRES_PASSWORD=portal-template
+
+    keycloak:
+        depends_on:
+            - keycloak-database
+        image: quay.io/keycloak/keycloak:24.0.1
+        ports:
+            - "8082:8080"
+        environment:
+            KEYCLOAK_ADMIN: admin
+            KEYCLOAK_ADMIN_PASSWORD: admin
+            KC_DB: postgres
+            KC_DB_URL: jdbc:postgresql://keycloak-database/keycloak
+            KC_DB_USERNAME: keycloak
+            KC_DB_PASSWORD: keycloak
+            KC_FEATURES: token-exchange,admin-fine-grained-authz
+            KC_HTTP_RELATIVE_PATH: /auth
+        volumes:
+            - ./docker/imports/keycloak:/opt/keycloak/data/import
+        command: "start-dev --import-realm"
+
+    keycloak-database:
+        image: postgres:14.1
+        environment:
+            POSTGRES_USER: keycloak
+            POSTGRES_PASSWORD: keycloak

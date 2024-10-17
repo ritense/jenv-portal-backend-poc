@@ -1,0 +1,74 @@
+server:
+    port: 8081
+
+management:
+    endpoint:
+        health:
+            enabled: true
+            probes:
+                enabled: true
+    endpoints:
+        web:
+            exposure:
+                include: health
+        enabled-by-default: false
+
+spring:
+    application:
+        name: jenv-zgw-portal
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8082/auth/realms/nlportal
+    liquibase:
+        enabled: false
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: org.postgresql.Driver
+        url: #env var
+        name: portal-template
+        username: #env var
+        password: #env var
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+nl-portal:
+    zgw:
+        zakenapi:
+            url: #env var
+            clientId: #env var
+            secret: #env var
+        catalogiapi:
+            url: #env var
+            clientId: #env var
+            secret: #env var
+        documentenapis:
+            default-document-api: openzaak
+            configurations:
+                openzaak:
+                    url: #env var
+                    clientId: #env var
+                    secret: #env var
+                    rsin: #env var
+                    documentTypeUrl: #env var
+    security:
+        cors:
+            -   path: "/**"
+                config:
+                    allowedHeaders: "*"
+                    allowedOrigins: "*"
+                    allowedMethods: "*"
+
+keycloak:
+    resource: gzac-portal-m2m
+    audience: gzac-portal-token-exchange
+    credentials:
+        secret: ookVRUAxmEWMcosfcGR5nxeoUC4Rgwbc
+
+graphql:
+    packages:
+        - "nl.nlportal"
+logging:
+    level:
+        root: INFO

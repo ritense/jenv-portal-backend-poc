@@ -1,0 +1,50 @@
+server:
+    port: 8090
+
+management:
+    endpoint:
+        health:
+            enabled: true
+            probes:
+                enabled: true
+    endpoints:
+        web:
+            exposure:
+                include: health
+        enabled-by-default: false
+
+spring:
+    application:
+        name: portal-backend-template
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: #externaly overwritten
+    liquibase:
+        enabled: false
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: org.postgresql.Driver
+        url: #externaly overwritten
+        username: #externaly overwritten
+        password: #externaly overwritten
+
+logging:
+    level:
+        org:
+            springframework:
+                amqp: DEBUG
+
+nl-portal:
+    openzaak:
+        url: http://localhost:8001
+        clientId: gzac
+        secret: # set with environment variable
+    security:
+        cors:
+            -   path: "/**"
+                config:
+                    allowedHeaders: "*"
+                    allowedOrigins: "*"
+                    allowedMethods: "*"
